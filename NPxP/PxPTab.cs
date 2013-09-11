@@ -174,7 +174,14 @@ namespace NPxP
         public void OnWebDBConnected(IWebDBConnectionInfo info)
         {
             // WriteHelper.Log("OnWebDBConnected()");
-            JobHelper.DbConnectString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};", info.ServerName, info.DatabaseName, info.UserName, info.Password);
+            if (info.UseTrustedConnection == 1)
+            {
+                JobHelper.DbConnectString = String.Format("Data Source={0};Initial Catalog={1};Integrated Security=true;", info.ServerName, info.DatabaseName);
+            }
+            else
+            {
+                JobHelper.DbConnectString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};", info.ServerName, info.DatabaseName, info.UserName, info.Password);
+            }
         }
 
         // (12)
@@ -200,6 +207,8 @@ namespace NPxP
         public void OnPxPConfig(IPxPInfo info)
         {
             // WriteHelper.Log("OnPxPConfig()");
+            // DEBUG: 1. When open history, info is null
+            //        2. Database PxPInfo field length only 4000, must alter length
             JobHelper.PxPInfo = info;
             
         }
@@ -331,6 +340,7 @@ namespace NPxP
             // WriteHelper.Log("OnEvents()");
             foreach (IEventInfo eventInfo in events)
             {
+                WriteHelper.Log(eventInfo.Name);
                 switch ((e_EventID)eventInfo.EventType)
                 {
                     case e_EventID.STOP_JOB:
@@ -346,7 +356,7 @@ namespace NPxP
                         //WriteHelper.Log("CutEvent(): " + eventInfo.MD);
 
                         NowUnit unitFlawMapCD = _units.Find(x => x.ComponentName == "Flaw Map CD");
-                        double cdOffset = JobHelper.PxPInfo.LeftOffset / unitFlawMapCD.Conversion;
+                        double cdOffset = JobHelper.PxPInfo.LeftOffset;
                       
                         _cuts.Add(eventInfo.MD);
 
@@ -462,6 +472,7 @@ namespace NPxP
                 dh.GetEachFlawQuantity(ref jobDoffNum, mdRange);
                 _mp.UpdatePagesCount();
                 _mp.JumpToSpecificPiece(1);
+                _mp.RefreshByDbConfig();
             }
             else
             {

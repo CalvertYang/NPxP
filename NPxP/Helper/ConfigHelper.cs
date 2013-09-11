@@ -22,8 +22,16 @@ namespace NPxP.Helper
         public List<Column> GetdgvFlawColumns()
         {
             List<Column> columns = new  List<Column>();
+            string system_config_path = "";
 
-            string system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            if (JobHelper.IsOpenHistory)
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.database";
+            }
+            else
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            }
             using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -44,8 +52,18 @@ namespace NPxP.Helper
         // 取得 PxPTab.cs/tlpFlawImages 幾列(預設)
         public int GettlpFlawImagesRows()
         {
-            string map_name = GetDefaultMapConfigName();
-            string map_config_path = PathHelper.MapConfigFolder + map_name + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                string map_name = GetDefaultMapConfigName();
+                map_config_path = PathHelper.MapConfigFolder + map_name + ".xml";
+            }
+            
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -58,7 +76,20 @@ namespace NPxP.Helper
         // 取得 PxPTab.cs/tlpFlawImages 幾列(使用檔名)
         public int GettlpFlawImagesRows(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            return GettlpFlawImagesRows(fileName, false);
+        }
+
+        public int GettlpFlawImagesRows(string fileName,bool isOpenHistory)
+        {
+            string map_config_path = "";
+            if (isOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -71,8 +102,18 @@ namespace NPxP.Helper
         // 取得 PxPTab.cs/tlpFlawImages 幾攔(預設)
         public int GettlpFlawImagesColumns()
         {
-            string map_name = GetDefaultMapConfigName();
-            string map_config_path = PathHelper.MapConfigFolder + map_name + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                string map_name = GetDefaultMapConfigName();
+                map_config_path = PathHelper.MapConfigFolder + map_name + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -85,7 +126,20 @@ namespace NPxP.Helper
         // 取得 PxPTab.cs/tlpFlawImages 幾攔(使用檔名)
         public int GettlpFlawImagesColumns(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            return GettlpFlawImagesColumns(fileName, false);
+        }
+
+        public int GettlpFlawImagesColumns(string fileName, bool isOpenHistory)
+        {
+            string map_config_path = "";
+            if (!isOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -98,7 +152,17 @@ namespace NPxP.Helper
         // 取得 PxPTab.cs/dgvFlaw 排序的欄位名稱
         public string GetSortByColumnName()
         {
-            string system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            string system_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.database";
+            }
+            else
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            }
+
             using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -111,20 +175,42 @@ namespace NPxP.Helper
         // 取得 目前 Map config file name
         public string GetDefaultMapConfigName()
         {
-            string system_config_path = PathHelper.SystemConfigFolder + "default.xml";
-            using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
-            {
-                XPathDocument document = new XPathDocument(stream);
-                XPathNavigator navigator = document.CreateNavigator();
-                string filename = navigator.SelectSingleNode("/system/map_conf_name").Value;
+            string system_config_path = "";
 
-                return filename;
+            if (JobHelper.IsOpenHistory)
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.database";
+                
+                return "default.database";
+            }
+            else
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+
+                using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
+                {
+                    XPathDocument document = new XPathDocument(stream);
+                    XPathNavigator navigator = document.CreateNavigator();
+                    string filename = navigator.SelectSingleNode("/system/map_conf_name").Value;
+
+                    return filename;
+                }
             }
         }
         // 取得 MapWindow Filter Type
         public string GetFilterType()
         {
-            string system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            string system_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.database";
+            }
+            else
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+            }
+
             using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -153,20 +239,42 @@ namespace NPxP.Helper
         // 取得 目前 Grade config file name
         public string GetDefaultGradeConfigName()
         {
-            string system_config_path = PathHelper.SystemConfigFolder + "default.xml";
-            using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
-            {
-                XPathDocument document = new XPathDocument(stream);
-                XPathNavigator navigator = document.CreateNavigator();
-                string filename = navigator.SelectSingleNode("/system/grade_conf_name").Value;
+            string system_config_path = "";
 
-                return filename;
+            if (JobHelper.IsOpenHistory)
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.database";
+
+                return "default.database";
+            }
+            else
+            {
+                system_config_path = PathHelper.SystemConfigFolder + "default.xml";
+
+                using (FileStream stream = new FileStream(system_config_path, FileMode.Open))
+                {
+                    XPathDocument document = new XPathDocument(stream);
+                    XPathNavigator navigator = document.CreateNavigator();
+                    string filename = navigator.SelectSingleNode("/system/grade_conf_name").Value;
+
+                    return filename;
+                }
             }
         }
         // 取得 MapSetup.cs Map 格線是否開啟
         public bool GetIsDisplayMapGrid(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -179,7 +287,16 @@ namespace NPxP.Helper
         // 取得 MapSetup.cs 格線顯示模式 0->FixCellSize, 1-> EachCellCount
         public bool GetIsFixCellSizeMode(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -194,7 +311,16 @@ namespace NPxP.Helper
         // 取得 FixCellSize 時 symbol
         public string GetFixCellSizeSmybol(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -206,7 +332,17 @@ namespace NPxP.Helper
         // 取得 FixCellSize 時 CD
         public double GetFixCellSizeCD(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -218,7 +354,17 @@ namespace NPxP.Helper
         // 取得 FixCellSize 時 MD
         public double GetFixCellSizeMD(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+            
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -230,7 +376,17 @@ namespace NPxP.Helper
         // 取得 CountSize 時 CD
         public int GetCountSizeCD(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+            
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -242,7 +398,16 @@ namespace NPxP.Helper
         // 取得 CountSize 時 MD
         public int GetCountSizeMD(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -254,7 +419,16 @@ namespace NPxP.Helper
         // 取得 Bottom Axes 
         public string GetBottomAxes(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -266,7 +440,16 @@ namespace NPxP.Helper
         // 取得 MD 是否反轉(垂直翻轉)
         public bool IsMdInver_Y(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -279,7 +462,17 @@ namespace NPxP.Helper
         // 取得 CD 是否反轉(水平翻轉)
         public bool IsCdInver_X(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -292,7 +485,17 @@ namespace NPxP.Helper
         // 取得 Map Control 的 X 比例(X:Y)
         public int GetMapProportion_X(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -305,7 +508,17 @@ namespace NPxP.Helper
         // 取得 Map Control 的 Y 比例(X:Y)
         public int GetMapProportion_Y(string fileName)
         {
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -319,7 +532,17 @@ namespace NPxP.Helper
         public List<string> GetPrevFlawLegendList(string fileName)
         {
             List<string> legends = new List<string>();
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -337,7 +560,17 @@ namespace NPxP.Helper
         public Dictionary<int,string> GetPrevFlawLegendDictionary(string fileName)
         {
             Dictionary<int, string> legends = new Dictionary<int, string>();
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -356,7 +589,17 @@ namespace NPxP.Helper
         public Dictionary<string, int> GetPrevFlawLegendDictionaryID(string fileName)
         {
             Dictionary<string, int> legends = new Dictionary<string, int>();
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -374,6 +617,11 @@ namespace NPxP.Helper
         // 取得 Map Setup FlawLegend(FlawType) DataTable
         public DataTable GetDataTablePrevFlawLegend(string fileName)
         {
+            return GetDataTablePrevFlawLegend(fileName, false);
+        }
+
+        public DataTable GetDataTablePrevFlawLegend(string fileName, bool isOpenHistory)
+        {
             DataTable dtb = new DataTable("FlawLegends");
             dtb.Columns.Add("FlawType", typeof(int));
             dtb.Columns.Add("Name", typeof(string));
@@ -389,7 +637,15 @@ namespace NPxP.Helper
             dicLegendShape.Add("Cross", "✖");
             dicLegendShape.Add("Star", "★");
 
-            string map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            string map_config_path = "";
+            if (isOpenHistory)
+            {
+                map_config_path = PathHelper.MapConfigFolder + "default.database";
+            }
+            else
+            {
+                map_config_path = PathHelper.MapConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(map_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -423,7 +679,17 @@ namespace NPxP.Helper
         // 取得 Grade Mode 
         public string GetGradeNoRoiMode(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -437,7 +703,17 @@ namespace NPxP.Helper
         // 取得 Grade Column Size
         public int GetGradeColumns(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -451,7 +727,17 @@ namespace NPxP.Helper
         // 取得 Grade Rows Size
         public int GetGradeRows(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -470,7 +756,16 @@ namespace NPxP.Helper
             dtb.Columns.Add("Start", typeof(double));
             dtb.Columns.Add("End", typeof(double));
 
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -499,7 +794,16 @@ namespace NPxP.Helper
             dtb.Columns.Add("Start", typeof(double));
             dtb.Columns.Add("End", typeof(double));
 
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -523,7 +827,17 @@ namespace NPxP.Helper
         // 取得 Grade / point is enable
         public bool IsGradePointEnable(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -538,7 +852,17 @@ namespace NPxP.Helper
         public List<string> GetSubPointsNameList(string fileName)
         {
             List<string> subpieces = new List<string>();
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -557,7 +881,17 @@ namespace NPxP.Helper
         public List<string> GetSubMarksNameList(string fileName)
         {
             List<string> subpieces = new List<string>();
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -575,6 +909,11 @@ namespace NPxP.Helper
         // 取得 所有 GradeSetup.cs/ dgvPoint DataTable (All, ROI-11, ROI-12...) All in one table.
         public DataTable GetDataTabledgvPoints(string fileName)
         {
+            return GetDataTabledgvPoints(fileName, false);
+        }
+
+        public DataTable GetDataTabledgvPoints(string fileName, bool isOpenHistory)
+        {
             DataTable dtb = new DataTable();
             dtb.Columns.Add("SubpieceName", typeof(string));
             dtb.Columns.Add("ClassName", typeof(string));
@@ -582,7 +921,15 @@ namespace NPxP.Helper
             string map_path = GetDefaultMapConfigName();
             Dictionary<int, string> flawTypeNames = GetPrevFlawLegendDictionary(map_path); //<flawtype, name> ex : <0, Not Classified>
 
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+            if (isOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -620,12 +967,25 @@ namespace NPxP.Helper
         // 取得 所有 GradeSetup.cs/ dgvGrade DataTable (All, ROI-11, ROI-12...) All in one table.
         public DataTable GetDataTabledgvGrade(string fileName)
         {
+            return GetDataTabledgvGrade(fileName, false);
+        }
+        
+        public DataTable GetDataTabledgvGrade(string fileName, bool isOpenHistory)
+        {
             DataTable dtb = new DataTable();
             dtb.Columns.Add("SubpieceName", typeof(string));
             dtb.Columns.Add("GradeName", typeof(string));
             dtb.Columns.Add("Score", typeof(int));
 
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+            if (isOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -658,7 +1018,16 @@ namespace NPxP.Helper
             dtb.Columns.Add("Grade", typeof(string));
             dtb.Columns.Add("Score", typeof(int));
 
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -680,7 +1049,17 @@ namespace NPxP.Helper
         // 取得 Grade / marks(grade) is enable
         public bool IsGradeMarksEnable(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -694,7 +1073,17 @@ namespace NPxP.Helper
         // 取得 Grade / pass_fail 
         public bool IsGradePassFailEnable(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);
@@ -708,7 +1097,17 @@ namespace NPxP.Helper
         // 取得 Grade / pass_fail / score
         public int GetPassFailScore(string fileName)
         {
-            string grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            string grade_config_path = "";
+
+            if (JobHelper.IsOpenHistory)
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + "default.database";
+            }
+            else
+            {
+                grade_config_path = PathHelper.GradeConfigFolder + fileName + ".xml";
+            }
+
             using (FileStream stream = new FileStream(grade_config_path, FileMode.Open))
             {
                 XPathDocument document = new XPathDocument(stream);

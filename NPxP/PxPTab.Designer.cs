@@ -86,7 +86,7 @@
             this.btnPrevFlawImages.Enabled = false;
             this.btnPrevFlawImages.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.btnPrevFlawImages.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.btnPrevFlawImages.Location = new System.Drawing.Point(177, 688);
+            this.btnPrevFlawImages.Location = new System.Drawing.Point(12, 688);
             this.btnPrevFlawImages.Name = "btnPrevFlawImages";
             this.btnPrevFlawImages.Size = new System.Drawing.Size(52, 41);
             this.btnPrevFlawImages.TabIndex = 2;
@@ -100,7 +100,7 @@
             this.btnNextFlawImages.Enabled = false;
             this.btnNextFlawImages.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.btnNextFlawImages.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.btnNextFlawImages.Location = new System.Drawing.Point(502, 688);
+            this.btnNextFlawImages.Location = new System.Drawing.Point(326, 688);
             this.btnNextFlawImages.Name = "btnNextFlawImages";
             this.btnNextFlawImages.Size = new System.Drawing.Size(52, 41);
             this.btnNextFlawImages.TabIndex = 3;
@@ -114,7 +114,7 @@
             this.lblSlash.AutoSize = true;
             this.lblSlash.BackColor = System.Drawing.Color.Transparent;
             this.lblSlash.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblSlash.Location = new System.Drawing.Point(367, 700);
+            this.lblSlash.Location = new System.Drawing.Point(173, 699);
             this.lblSlash.Name = "lblSlash";
             this.lblSlash.Size = new System.Drawing.Size(14, 19);
             this.lblSlash.TabIndex = 4;
@@ -126,7 +126,7 @@
             this.lblTotalPage.AutoSize = true;
             this.lblTotalPage.BackColor = System.Drawing.Color.Transparent;
             this.lblTotalPage.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblTotalPage.Location = new System.Drawing.Point(396, 700);
+            this.lblTotalPage.Location = new System.Drawing.Point(202, 699);
             this.lblTotalPage.Name = "lblTotalPage";
             this.lblTotalPage.Size = new System.Drawing.Size(27, 19);
             this.lblTotalPage.TabIndex = 5;
@@ -138,7 +138,7 @@
             this.lblNowPage.AutoSize = true;
             this.lblNowPage.BackColor = System.Drawing.Color.Transparent;
             this.lblNowPage.Font = new System.Drawing.Font("新細明體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lblNowPage.Location = new System.Drawing.Point(321, 700);
+            this.lblNowPage.Location = new System.Drawing.Point(127, 699);
             this.lblNowPage.Name = "lblNowPage";
             this.lblNowPage.Size = new System.Drawing.Size(27, 19);
             this.lblNowPage.TabIndex = 6;
@@ -146,9 +146,9 @@
             // 
             // btnShowGoPage
             // 
-            this.btnShowGoPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowGoPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnShowGoPage.Enabled = false;
-            this.btnShowGoPage.Location = new System.Drawing.Point(599, 688);
+            this.btnShowGoPage.Location = new System.Drawing.Point(617, 688);
             this.btnShowGoPage.Name = "btnShowGoPage";
             this.btnShowGoPage.Size = new System.Drawing.Size(130, 41);
             this.btnShowGoPage.TabIndex = 7;
@@ -159,8 +159,8 @@
             // 
             // txtGoPage
             // 
-            this.txtGoPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtGoPage.Location = new System.Drawing.Point(607, 699);
+            this.txtGoPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGoPage.Location = new System.Drawing.Point(625, 699);
             this.txtGoPage.Name = "txtGoPage";
             this.txtGoPage.Size = new System.Drawing.Size(57, 22);
             this.txtGoPage.TabIndex = 8;
@@ -168,8 +168,8 @@
             // 
             // btnGo
             // 
-            this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnGo.Location = new System.Drawing.Point(667, 697);
+            this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGo.Location = new System.Drawing.Point(685, 697);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(54, 26);
             this.btnGo.TabIndex = 9;

@@ -140,7 +140,7 @@ namespace NPxP
             document.Load(map_path);
             XPathNavigator navigator = document.CreateNavigator();
             XPathNodeIterator node = navigator.Select("//map_window/flaw_legend");
-            
+
             // remove old flawlegend for add records
             if (navigator.Select("//map_window/flaw_legend").Count > 0 && _dtbFlawLegends.Rows.Count > 0)
             {
@@ -680,7 +680,7 @@ namespace NPxP
                             break;
                     }
                 }
-            
+
                 // Calc flaw number of this job
                 foreach (DataRow dr in flawRows)
                 {
@@ -714,7 +714,7 @@ namespace NPxP
             {
                 // get current using unit
                 NowUnit ucd = _units.Find(x => x.ComponentName == "Flaw Map CD");
-                double cdOffset = JobHelper.PxPInfo.LeftOffset / ucd.Conversion;
+                double cdOffset = JobHelper.PxPInfo.LeftOffset;
 
                 DataHelper dh = new DataHelper();
 
@@ -1321,7 +1321,7 @@ namespace NPxP
                 double topOfPart = bottomOfPart - JobHelper.PxPInfo.Height;
 
                 NowUnit unitFlawMapCD = _units.Find(x => x.ComponentName == "Flaw Map CD");
-                double cdOffset = JobHelper.PxPInfo.LeftOffset / unitFlawMapCD.Conversion;
+                double cdOffset = JobHelper.PxPInfo.LeftOffset;
 
                 DataHelper dh = new DataHelper();
                 dh.GetFlawDataFromDb(ref _dtbFlaws, cdOffset, topOfPart, bottomOfPart);
@@ -1365,11 +1365,11 @@ namespace NPxP
                 double topOfPart = bottomOfPart - JobHelper.PxPInfo.Height;
 
                 NowUnit unitFlawMapCD = _units.Find(x => x.ComponentName == "Flaw Map CD");
-                double cdOffset = JobHelper.PxPInfo.LeftOffset / unitFlawMapCD.Conversion;
+                double cdOffset = JobHelper.PxPInfo.LeftOffset;
 
                 DataHelper dh = new DataHelper();
                 dh.GetFlawDataFromDb(ref _dtbFlaws, cdOffset, topOfPart, bottomOfPart);
-                
+
                 // Create flaw image controls
                 _pxp.CreateFlawImageControl();
 
@@ -1468,7 +1468,7 @@ namespace NPxP
                 double topOfPart = bottomOfPart - JobHelper.PxPInfo.Height;
 
                 NowUnit unitFlawMapCD = _units.Find(x => x.ComponentName == "Flaw Map CD");
-                double cdOffset = JobHelper.PxPInfo.LeftOffset / unitFlawMapCD.Conversion;
+                double cdOffset = JobHelper.PxPInfo.LeftOffset;
 
                 DataHelper dh = new DataHelper();
                 dh.GetFlawDataFromDb(ref _dtbFlaws, cdOffset, topOfPart, bottomOfPart);
@@ -1492,7 +1492,7 @@ namespace NPxP
             double topOfPart = bottomOfPart - JobHelper.PxPInfo.Height;
 
             NowUnit unitFlawMapCD = _units.Find(x => x.ComponentName == "Flaw Map CD");
-            double cdOffset = JobHelper.PxPInfo.LeftOffset / unitFlawMapCD.Conversion;
+            double cdOffset = JobHelper.PxPInfo.LeftOffset;
 
             DataHelper dh = new DataHelper();
             dh.GetFlawDataFromDb(ref _dtbFlaws, cdOffset, topOfPart, bottomOfPart);
@@ -1502,6 +1502,130 @@ namespace NPxP
 
             DrawChartPoint();
             UpdateUIControl();
+        }
+
+        public void RefreshByDbConfig()
+        {
+            string dbConfigFinename = "default.database";
+
+            try
+            {
+                ConfigHelper ch = new ConfigHelper();
+
+                // Refresh _dtbPoints
+                // update _dtbPoints score.
+                _dtbPoints = ch.GetDataTabledgvPoints(dbConfigFinename, true);
+                foreach (DataRow d in _dtbPoints.Rows)
+                {
+                    string subpiece = d["SubpieceName"].ToString().Trim();
+                    string className = d["ClassName"].ToString().Trim();
+                    string expr = String.Format("SubpieceName='{0}' AND ClassName='{1}'", subpiece, className);
+                    DataRow[] drs = _dtbPoints.Select(expr);
+                    if (drs.Length > 0)
+                    {
+                        foreach (DataRow dr in drs)
+                        {
+                            dr["Score"] = d["Score"];
+                        }
+                    }
+                }
+                // update _dtbGrades grade
+                _dtbGrades = ch.GetDataTabledgvGrade(dbConfigFinename, true);
+                foreach (DataRow d in _dtbGrades.Rows)
+                {
+                    string subpiece = d["SubpieceName"].ToString().Trim();
+                    string gradeName = d["GradeName"].ToString().Trim();
+                    string expr = String.Format("SubpieceName='{0}' AND GradeName='{1}'", subpiece, gradeName);
+                    DataRow[] drs = _dtbGrades.Select(expr);
+                    if (drs.Length > 0)
+                    {
+                        foreach (DataRow dr in drs)
+                        {
+                            dr["Score"] = d["Score"];
+                        }
+                    }
+                }
+
+                ///////////
+                DrawDummyPoint();
+                XYDiagram diagram = null;
+                if ((XYDiagram)chartControl.Diagram != null)
+                {
+                    diagram = (XYDiagram)chartControl.Diagram;
+                }
+
+                if (_legend != null && _legend.Count > 0)
+                {
+                    // Reload flawlegend
+                    _dtbFlawLegends.Rows.Clear();
+                    // Add jobloaded records
+                    foreach (FlawLegend f in _legend)
+                    {
+                        DataRow dr = _dtbFlawLegends.NewRow();
+                        dr["Display"] = f.VisibleFlags;
+                        dr["FlawType"] = f.ClassID;
+                        dr["Name"] = f.Name;
+                        dr["Shape"] = "Cone";
+                        dr["Color"] = String.Format("#{0:X2}{1:X2}{2:X2}", ColorTranslator.FromWin32((int)f.Color).R,
+                                                                ColorTranslator.FromWin32((int)f.Color).G,
+                                                                ColorTranslator.FromWin32((int)f.Color).B);
+                        dr["PieceDoffNum"] = 0;
+                        dr["JobDoffNum"] = 0;
+                        _dtbFlawLegends.Rows.Add(dr);
+                    }
+
+                    DataTable dtbLegendFromConfig = ch.GetDataTablePrevFlawLegend(dbConfigFinename, true);
+
+                    foreach (DataRow d in dtbLegendFromConfig.Rows)
+                    {
+                        string expr = String.Format("FlawType={0} AND Name='{1}'", d["FlawType"].ToString().Trim(), d["Name"].ToString().Trim());
+                        DataRow[] drs = _dtbFlawLegends.Select(expr);
+                        if (drs.Length > 0)
+                        {
+                            drs[0]["Shape"] = d["Shape"].ToString().Trim();
+                            drs[0]["Color"] = d["Color"].ToString().Trim();
+                        }
+                    }
+
+                    dgvFlawLegend.ClearSelection();
+                    dgvFlawLegendDetial.ClearSelection();
+
+
+                    // Re-configure Chart
+                    if (diagram != null)
+                    {
+                        InitChart();
+                        DrawChartPoint();
+                    }
+                }
+                // Refresh pxptab tablelayout
+                _pnl.ColumnCount = ch.GettlpFlawImagesColumns(dbConfigFinename, true);
+                _pnl.RowCount = ch.GettlpFlawImagesRows(dbConfigFinename, true);
+                _pnl.ColumnStyles.Clear();
+                int phdHeight = _pnl.Height / _pnl.RowCount;
+                int phdrWidth = _pnl.Width / _pnl.ColumnCount;
+                for (int i = 0; i < _pnl.RowCount; i++)
+                {
+                    _pnl.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+                }
+
+                for (int i = 0; i < _pnl.ColumnCount; i++)
+                {
+                    _pnl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+                }
+                // 呼叫 RefreshtlpImagesControls 重新加入控制項, 然後重新計算總頁數
+                if (_dtbFlaws != null)
+                {
+                    _pxp.RefreshtlpImagesControls(1);
+                    int dataCount = _dtbFlaws.Select().Length;
+                    int totalPage = dataCount % (_pnl.ColumnCount * _pnl.RowCount) == 0 ?
+                                 dataCount / (_pnl.ColumnCount * _pnl.RowCount) :
+                                 dataCount / (_pnl.ColumnCount * _pnl.RowCount) + 1;
+                    _pxp.Controls["lblTotalPage"].Text = totalPage.ToString();
+                }
+
+            }
+            catch { }
         }
 
         #endregion
